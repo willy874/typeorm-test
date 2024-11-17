@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db-service:
+    container_name: app-db-service
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: bam_cms
+    ports:
+      - "3308:3306"
+    networks:
+      - app-network
+  api-service:
+    container_name: app-api-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db-service
+    networks:
+      - app-network
+    command: npm run start
+  web-service:
+    container_name: app-web-service
+    image: nginx:latest
+    ports:
+      - "8765:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    command: ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
+    networks:
+      - app-network
+    depends_on:
+      - api-service
+networks:
+  app-network:
+    driver: bridge
