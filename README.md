@@ -1,16 +1,5 @@
-Database 分類
+# TypeORM Test
 
-RelationDB
-  MySQL
-  PostgreSQL
-  MSSQL
+## 練習專案
 
-Document
-  MongoDB
-  Firebase
-
-Key-Value
-  redis
-
-Graph
-  neo4j
+主要練習 docker-compose, TypeORM
