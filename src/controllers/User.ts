@@ -1,20 +1,13 @@
 import { Request } from "express";
-import { Repository } from "typeorm";
 import { Controller } from "../libs/controller";
-import { ControllerMiddleware, Route } from "../libs/route";
 import User from "../models/User";
+import { AppDataSource } from "../libs/data-source";
 
-@ControllerMiddleware({
-  path: '/api'
-})
+@Controller.Prefix('/api')
 export default class UserController extends Controller {
-  userRepo!: Repository<User>
+  userRepo = AppDataSource.manager.getRepository(User)
 
-  init(): void {
-    this.userRepo = this.dataSource.manager.getRepository(User)
-  }
-  
-  @Route({ method: 'GET', path: '/post-data' })
+  @Controller.Get('/post-data')
   async getUsers() {
     const users = await this.userRepo.createQueryBuilder().getMany()
     return {
@@ -23,7 +16,7 @@ export default class UserController extends Controller {
     }
   }
 
-  @Route({ method: 'POST', path: '/post-data' })
+  @Controller.Post('/post-data')
   async createUser() {
     await this.userRepo
       .createQueryBuilder()
@@ -37,7 +30,7 @@ export default class UserController extends Controller {
     return { message: 'success!' }
   }
 
-  @Route({ method: 'DELETE', path: '/post-data/:id' })
+  @Controller.Delete('/post-data/:id')
   async deleteUser(req: Request) {
     await this.userRepo
       .createQueryBuilder()

@@ -1,7 +1,7 @@
-const path = require('path')
-const { DataSource } = require('typeorm')
+import path from "path";
+import { DataSource} from "typeorm";
 
-module.exports = new DataSource({
+export default new DataSource({
   type: 'mysql',
   host: 'localhost',
   port: 3308,
